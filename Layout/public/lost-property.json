@@ -1,0 +1,178 @@
+{
+  "service": "lost-property",
+  "features": [
+    {
+      "name": "ClaimItem",
+      "family": "command",
+      "cases": [
+        "Claimed",
+        "AlreadyClaimed",
+        "DoesntMatchReport",
+        "NotFound"
+      ]
+    },
+    {
+      "name": "DonatedToCharity",
+      "family": "query",
+      "cases": []
+    },
+    {
+      "name": "HandInItem",
+      "family": "command",
+      "cases": [
+        "HandedIn",
+        "NeedsDetails"
+      ]
+    },
+    {
+      "name": "HandleCharityCollectionDue",
+      "family": "worker",
+      "cases": []
+    },
+    {
+      "name": "HandleItemHandedIn",
+      "family": "worker",
+      "cases": []
+    },
+    {
+      "name": "ItemsFoundAt",
+      "family": "query",
+      "cases": []
+    },
+    {
+      "name": "ReportLostItem",
+      "family": "command",
+      "cases": [
+        "Reported",
+        "MayAlreadyHaveIt",
+        "NeedsDetails"
+      ]
+    },
+    {
+      "name": "UnclaimedItems",
+      "family": "query",
+      "cases": []
+    },
+    {
+      "name": "YourLostReports",
+      "family": "query",
+      "cases": []
+    }
+  ],
+  "links": [
+    {
+      "from": "ClaimItem",
+      "to": "YourLostReports",
+      "via": [
+        "ClaimItem.Result.Claimed.LinkToYourReports",
+        "ClaimItem.Result.DoesntMatchReport.LinkToYourReports"
+      ]
+    },
+    {
+      "from": "ClaimItem",
+      "to": "ClaimItem",
+      "via": [
+        "ClaimItem.Result.DoesntMatchReport.LinkToClaim"
+      ]
+    },
+    {
+      "from": "DonatedToCharity",
+      "to": "UnclaimedItems",
+      "via": [
+        "DonatedToCharity.Result.LinkToUnclaimedItems"
+      ]
+    },
+    {
+      "from": "HandInItem",
+      "to": "UnclaimedItems",
+      "via": [
+        "HandInItem.Result.HandedIn.LinkToUnclaimedItems"
+      ]
+    },
+    {
+      "from": "HandInItem",
+      "to": "HandInItem",
+      "via": [
+        "HandInItem.Result.NeedsDetails.LinkToHandIn"
+      ]
+    },
+    {
+      "from": "ItemsFoundAt",
+      "to": "UnclaimedItems",
+      "via": [
+        "ItemsFoundAt.Result.LinkToAllStations"
+      ]
+    },
+    {
+      "from": "ReportLostItem",
+      "to": "YourLostReports",
+      "via": [
+        "ReportLostItem.Result.Reported.LinkToYourReports",
+        "ReportLostItem.Result.MayAlreadyHaveIt.LinkToYourReports"
+      ]
+    },
+    {
+      "from": "ReportLostItem",
+      "to": "ClaimItem",
+      "via": [
+        "ReportLostItem.Result.MayAlreadyHaveIt.LinkToClaim"
+      ]
+    },
+    {
+      "from": "ReportLostItem",
+      "to": "ReportLostItem",
+      "via": [
+        "ReportLostItem.Result.NeedsDetails.LinkToReport"
+      ]
+    },
+    {
+      "from": "UnclaimedItems",
+      "to": "ItemsFoundAt",
+      "via": [
+        "UnclaimedItems.Result.Items.LinkToStation"
+      ]
+    },
+    {
+      "from": "UnclaimedItems",
+      "to": "HandInItem",
+      "via": [
+        "UnclaimedItems.Result.LinkToHandIn"
+      ]
+    },
+    {
+      "from": "UnclaimedItems",
+      "to": "YourLostReports",
+      "via": [
+        "UnclaimedItems.Result.LinkToYourReports"
+      ]
+    },
+    {
+      "from": "UnclaimedItems",
+      "to": "DonatedToCharity",
+      "via": [
+        "UnclaimedItems.Result.LinkToDonated"
+      ]
+    },
+    {
+      "from": "YourLostReports",
+      "to": "ClaimItem",
+      "via": [
+        "YourLostReports.Result.Reports.LinkToClaim"
+      ]
+    },
+    {
+      "from": "YourLostReports",
+      "to": "ReportLostItem",
+      "via": [
+        "YourLostReports.Result.LinkToReport"
+      ]
+    },
+    {
+      "from": "YourLostReports",
+      "to": "UnclaimedItems",
+      "via": [
+        "YourLostReports.Result.LinkToUnclaimedItems"
+      ]
+    }
+  ]
+}

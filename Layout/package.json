@@ -1,0 +1,19 @@
+{
+  "name": "featurewise-diagrams-layout",
+  "private": true,
+  "type": "module",
+  "description": "Lays out a featurewise service's features as boats, and the links between them as curves, by simulated annealing.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "test": "vitest run",
+    "layout": "tsx src/cli.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "tsx": "^4.21.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.5",
+    "vitest": "^5.1.0"
+  }
+}
