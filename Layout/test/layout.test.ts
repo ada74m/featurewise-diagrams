@@ -47,11 +47,13 @@ describe("the lost property office", () => {
     expect(score(lostProperty, first.best).total).toBeCloseTo(first.bestScore.total);
   }, 30000);
 
-  it("draws every boat and every link", () => {
+  it("draws every boat and every link, and a key of the families", () => {
     const annealer = new Annealer(lostProperty, { seed: 1, steps: 100 });
     annealer.run(Infinity);
     const svg = svgOf(lostProperty, annealer.best);
-    expect(svg.match(/class="boat /g)).toHaveLength(9);
+    expect(svg.match(/class="boat /g)).toHaveLength(9 + 3);
+    expect(svgOf(lostProperty, annealer.best, { key: false }).match(/class="boat /g)).toHaveLength(9);
+    expect(svg).toContain(">Handler</text>");
     expect(svg.match(/class="link"/g)).toHaveLength(16);
     expect(svg).toContain(">HandleCharityCollectionDue</text>");
   });
