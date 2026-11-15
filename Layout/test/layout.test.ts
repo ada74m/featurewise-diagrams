@@ -53,7 +53,7 @@ describe("the lost property office", () => {
     const svg = svgOf(lostProperty, annealer.best);
     expect(svg.match(/class="boat /g)).toHaveLength(9 + 3);
     expect(svgOf(lostProperty, annealer.best, { key: false }).match(/class="boat /g)).toHaveLength(9);
-    expect(svg).toContain(">Handler</text>");
+    expect(svg).toContain(">Worker</text>");
     expect(svg.match(/class="link"/g)).toHaveLength(16);
     expect(svg).toContain(">HandleCharityCollectionDue</text>");
   });

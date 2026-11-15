@@ -17,12 +17,11 @@ const FILL: Record<string, string> = {
 
 const f = (n: number) => n.toFixed(1);
 
-// The key: one boat for each family, left to right along the bottom.
 // The key: one boat for each family, one above the other, in a box in the bottom right-hand corner.
 const KEY = [
   { label: "Query", family: "query" },
   { label: "Command", family: "command" },
-  { label: "Handler", family: "worker" }
+  { label: "Worker", family: "worker" }
 ];
 const KEY_PAD = 0.6 * BEAM;
 const KEY_ROW = 1.5 * BEAM;
