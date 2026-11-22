@@ -36,3 +36,7 @@ dotnet run --project Extractor -- Examples/Messages/bin/Debug/net10.0/Messages.d
 - `render.ts`: the SVG. Names read stern to bow, as on the toy boat, unless that would turn them upside down.
 
 Workers have no links to them, since events trigger them, so for now they float free of the others.
+
+## Licence
+
+MIT: see `LICENSE`.
