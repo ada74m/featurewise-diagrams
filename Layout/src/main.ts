@@ -1,7 +1,7 @@
 import { Annealer } from "./anneal";
 import { defaultWeights, type Weights } from "./fitness";
 import { graphOf, type Graph, type GraphJson } from "./graph";
-import { svgOf } from "./render";
+import { BRAND, svgOf } from "./render";
 
 // The page: anneals a service's diagram while you watch, a batch of steps each frame, drawing the layout
 // as it goes, and shows the score term by term. Change a weight or the seed and start again.
@@ -29,6 +29,10 @@ async function main() {
     $("pause").textContent = paused ? "Resume" : "Pause";
   });
   $("download").addEventListener("click", download);
+  // The key and the margin change only the drawing, so it's drawn again, and the annealing goes on.
+  $("key").addEventListener("change", draw);
+  $("margin").addEventListener("input", draw);
+  $("brand").addEventListener("change", draw);
   start();
   requestAnimationFrame(frame);
 }
@@ -55,7 +59,7 @@ function frame() {
 function draw() {
   // While it anneals, show where it is; once done, the best it found.
   const layout = annealer.done ? annealer.best : annealer.layout;
-  $("view").innerHTML = svgOf(graph, layout);
+  $("view").innerHTML = svgOf(graph, layout, drawing());
   const shown = annealer.done ? annealer.bestScore : annealer.current;
   const progress = annealer.step / annealer.options.steps;
   ($("progress").firstElementChild as HTMLElement).style.width = `${(progress * 100).toFixed(1)}%`;
@@ -87,8 +91,21 @@ function buildWeights() {
   }
 }
 
+// How to draw: with or without the key, and with how much margin, in beams. A picture for a page wants
+// no key and a margin of about half a beam.
+function drawing() {
+  const margin = Number($<HTMLInputElement>("margin").value);
+  return {
+    key: $<HTMLInputElement>("key").checked,
+    margin: Number.isFinite(margin) && margin >= 0 ? margin : 2.5,
+    palette: $<HTMLInputElement>("brand").checked ? BRAND : undefined
+  };
+}
+
+// Saves what's shown. A layout found here is best saved here: the browser and Node can differ in the last
+// digits of their arithmetic, and annealing magnifies that, so the command line may not reproduce it.
 function download() {
-  const svg = svgOf(graph, annealer.done ? annealer.best : annealer.layout);
+  const svg = svgOf(graph, annealer.done ? annealer.best : annealer.layout, drawing());
   const url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml" }));
   const a = document.createElement("a");
   a.href = url;

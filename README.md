@@ -20,7 +20,14 @@ npm run layout -- public/lost-property.json ../out/lost-property.svg --seed 3
 npm test
 ```
 
-The page takes `?graph=<file>` for another graph in `public/`.
+The page takes `?graph=<file>` for another graph in `public/`. It can leave out the key and set the margin (in beams; about 0.5 for a picture on a web page), and **Download SVG** saves what it shows. Save a layout you like from the page: the command line runs the same code, but in Node, whose arithmetic can differ from the browser's in the last digits, and annealing magnifies that, so the same seed and weights may give a different layout there. The command line takes `--no-key`, `--margin <beams>` and `--weights name=value,…` too, for layouts made there.
+
+A link to a worker, in a feature's result, is drawn through a queue, a plain stack of slots: nobody can follow a link to a worker, so the entrypoint queues it. `Examples/Messages` is a handful of features written to be drawn, a message outbox whose `Send` queues `ActuallySend`, for featurewise.dev's home page:
+
+```
+dotnet build Examples/Messages
+dotnet run --project Extractor -- Examples/Messages/bin/Debug/net10.0/Messages.dll -o Layout/public/messages.json
+```
 
 - `boat.ts`: the hull, from Adam's toy-boat drawing: a rounded point at the bow, a square stern with rounded corners. The bow and stern scale with the beam, and the sides stretch to fit the name.
 - `layout.ts`: where each boat is and which way it points, and the curve for each link. A link leaves a bow the way it points and arrives at a stern the way that boat points; a link to itself loops beside the boat.

@@ -1,0 +1,96 @@
+{
+  "service": "messages",
+  "features": [
+    {
+      "name": "ActuallySend",
+      "family": "worker",
+      "cases": []
+    },
+    {
+      "name": "CancelSend",
+      "family": "command",
+      "cases": [
+        "Cancelled",
+        "AlreadySent"
+      ]
+    },
+    {
+      "name": "Compose",
+      "family": "command",
+      "cases": []
+    },
+    {
+      "name": "Messages",
+      "family": "query",
+      "cases": []
+    },
+    {
+      "name": "Send",
+      "family": "command",
+      "cases": [
+        "Queued",
+        "Incomplete",
+        "NotFound"
+      ]
+    }
+  ],
+  "links": [
+    {
+      "from": "CancelSend",
+      "to": "Messages",
+      "via": [
+        "CancelSend.Result.Cancelled.LinkToMessages",
+        "CancelSend.Result.AlreadySent.LinkToMessages"
+      ]
+    },
+    {
+      "from": "Compose",
+      "to": "Send",
+      "via": [
+        "Compose.Result.LinkToSend"
+      ]
+    },
+    {
+      "from": "Messages",
+      "to": "CancelSend",
+      "via": [
+        "Messages.Result.Messages.LinkToCancel"
+      ]
+    },
+    {
+      "from": "Messages",
+      "to": "Compose",
+      "via": [
+        "Messages.Result.LinkToCompose"
+      ]
+    },
+    {
+      "from": "Send",
+      "to": "ActuallySend",
+      "via": [
+        "Send.Result.Queued.LinkToActuallySend"
+      ]
+    },
+    {
+      "from": "Send",
+      "to": "CancelSend",
+      "via": [
+        "Send.Result.Queued.LinkToCancel"
+      ]
+    },
+    {
+      "from": "Send",
+      "to": "Messages",
+      "via": [
+        "Send.Result.Queued.LinkToMessages"
+      ]
+    },
+    {
+      "from": "Send",
+      "to": "Compose",
+      "via": [
+        "Send.Result.Incomplete.LinkToCompose"
+      ]
+    }
+  ]
+}

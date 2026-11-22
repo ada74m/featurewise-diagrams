@@ -7,6 +7,7 @@ import { pointToSegment, segmentsCross, vec } from "../src/geometry";
 import { graphOf, type GraphJson } from "../src/graph";
 import { svgOf } from "../src/render";
 
+const messages = graphOf(JSON.parse(readFileSync(new URL("../public/messages.json", import.meta.url), "utf8")) as GraphJson);
 const lostProperty = graphOf(JSON.parse(readFileSync(new URL("../public/lost-property.json", import.meta.url), "utf8")) as GraphJson);
 
 describe("geometry", () => {
@@ -56,5 +57,27 @@ describe("the lost property office", () => {
     expect(svg).toContain(">Worker</text>");
     expect(svg.match(/class="link"/g)).toHaveLength(16);
     expect(svg).toContain(">HandleCharityCollectionDue</text>");
+  });
+});
+
+describe("queues", () => {
+  const named = (name: string) => messages.nodes.findIndex(node => node.name === name);
+
+  it("stand between a link to a worker and the worker, since nobody can follow it", () => {
+    const queue = named("ActuallySend queue");
+    expect(messages.nodes[queue]!.family).toBe("queue");
+    expect(messages.edges.filter(edge => edge.to === named("ActuallySend")).map(edge => edge.from)).toEqual([queue]);
+    expect(messages.edges.some(edge => edge.from === named("Send") && edge.to === queue)).toBe(true);
+  });
+
+  it("are drawn as a stack of slots, and in the key only when there is one", () => {
+    const annealer = new Annealer(messages, { seed: 3, steps: 2000 });
+    annealer.run(Infinity);
+    expect(svgOf(messages, annealer.best)).toContain('class="queue"');
+    expect(svgOf(messages, annealer.best)).toContain(">Queue</text>");
+
+    const plain = new Annealer(lostProperty, { seed: 1, steps: 100 });
+    plain.run(Infinity);
+    expect(svgOf(lostProperty, plain.best)).not.toContain('class="queue"');
   });
 });
